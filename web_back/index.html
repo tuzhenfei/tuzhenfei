@@ -103,6 +103,18 @@
         }
 
     </script>
+    <script>
+        $.get({
+            url:'http://localhost:8000/admin/getuser',
+            success:function(res){
+                console.log(res);
+                $('.user_info').children('span').html('欢迎&nbsp&nbsp'+res.data.nickname)
+                $('.user_info').children('img').attr('src',res.data.user_pic)
+                $('.user_center_link').children('img').attr('src',res.data.user_pic)
+                
 
+            }
+        })
+    </script>
 </body>
 </html>
