@@ -47,7 +47,12 @@
                     <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
                     <div class="col-sm-10">
                         <img src="images/2.jpg" alt="" class="user_pic">
-                        <input type="file" name="user_pic" id="exampleInputFile">
+                        <input type="file" style="display: none" name="user_pic" id="exampleInputFile">
+                        <br>
+                        <!-- 美化上传按钮 -->
+                        <label for="exampleInputFile">
+                            <img src="./images/uploadFileIcon.png" alt="">    
+                        </label>
                     </div>
                 </div>
 
@@ -72,32 +77,29 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">提示框!!</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">温馨提示</h4>
                 </div>
-                <div class="modal-body my-modal-body"></div>
+                <div class="modal-body">
+                    修改成功!
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary">确认</button>
                 </div>
             </div>
         </div>
     </div>
+    </div>
     <script>
         $(function () {
-            $('#exampleInputFile').on('change', function () {
+            $('#exampleInputFile').on('change', function (e) {
                 var url = URL.createObjectURL(this.files[0]);
                 $('.user_pic').attr('src', url);
-                parent.location.reload()
-                $('#myModal').modal({
-                    keyboard: true
-                });
             });
             $.get({
                 url: 'http://localhost:8000/admin/userinfo_get',
                 success: function (res) {
-                    console.log(res);
                     for (key in res.data) {
                         $('.' + key).val(res.data[key]);
                     };
@@ -107,11 +109,6 @@
             $('.btn-success').on('click', function (e) {
                 e.preventDefault();
                 var form = new FormData($('form')[0]);
-                // $('.modal-body').text('账号密码为空')
-                // $('#myModal').modal({
-                //     keyboard: true
-                // });
-
                 $.post({
                     url: 'http://localhost:8000/admin/userinfo_edit',
                     data: form,
@@ -119,10 +116,7 @@
                     processData: false,
                     success: function (res) {
                         if (res.code == 200) {
-                            $('.modal-body').text('账号密码为空')
-                            $('#myModal').modal({
-                                keyboard: true
-                            });
+                            $('#myModal').modal();
                             $('.btn-primary').on('click', function () {
                                 $.get({
                                     url: 'http://localhost:8000/admin/getuser',
@@ -143,7 +137,7 @@
                                             )
                                     }
                                 })
-                                parent.location.reload()
+                                $('#myModal').modal('hide');
                             })
 
 
