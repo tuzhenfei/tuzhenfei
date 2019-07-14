@@ -102,6 +102,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="model_shutoff">关闭</button>
                     <button type="button" class="btn btn-primary" id="model_add">新增</button>
+                    <button type="button" class="btn btn-primary" id="model_addd">编辑</button>
                 </div>
             </div>
         </div>
@@ -136,7 +137,8 @@
             <td>{{$value.name}}</td>
             <td>{{$value.slug}}</td>
             <td class="text-center">
-                <a href="javascript:editTr({&quot;id&quot;:&quot;3&quot;,&quot;slug&quot;:&quot;living&quot;,&quot;name&quot;:&quot;会生活&quot;});"
+                <a ids="{{$value.id}}"
+                    href="javascript:editTr({&quot;id&quot;:&quot;3&quot;,&quot;slug&quot;:&quot;living&quot;,&quot;name&quot;:&quot;会生活&quot;});"
                     class="btn btn-info btn-xs">编辑</a>
                 <a href="" ids="{{$value.id}}" class="btn btn-danger btn-xs">删除</a>
             </td>
@@ -149,7 +151,7 @@
             <td>{{slug}}</td>
             <td class="text-center">
                 <a href="javascript:editTr({&quot;id&quot;:&quot;3&quot;,&quot;slug&quot;:&quot;living&quot;,&quot;name&quot;:&quot;会生活&quot;});"
-                    class="btn btn-info btn-xs">编辑</a>
+                    class="btn btn-info btn-xs" ids="{{id}}">编辑</a>
                 <a href="" ids="{{id}}" class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
@@ -199,6 +201,27 @@
                 success: function (res) {
                     that.parents('tr').remove()
                 }
+            })
+        })
+        $('tbody').on('click', '.btn-info', function (e) {
+            e.preventDefault();
+            $('#recipient-name').val($(this).parents('tr').children().eq(0).text())
+            $('#recipient-name1').val($(this).parents('tr').children().eq(1).text())
+            console.log(parseInt($(this).attr('ids')));
+            var thta = $(this)
+            $('#model_addd').on('click', function (e) {
+                e.preventDefault();
+                $.post({
+                    url: 'http://localhost:8000/admin/category_edit',
+                    data: {
+                        id: parseInt(thta.attr('ids')),
+                        name: $('#recipient-name').val(),
+                        slug: $('#recipient-name1').val()
+                    },
+                    success: function (res) {
+                        location.reload()
+                    }
+                })
             })
         })
     </script>
