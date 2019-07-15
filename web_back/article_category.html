@@ -178,8 +178,7 @@
                         $.get({
                             url: 'http://localhost:8000/admin/category_search',
                             success: function (res) {
-                                var resss = template('tpl1', res.data[res.data.length -
-                                    1])
+                                var resss = template('tpl1', res.data[res.data.length - 1])
                                 $('tbody').append(resss)
                                 $('#recipient-name').val('')
                                 $('#recipient-name1').val('')

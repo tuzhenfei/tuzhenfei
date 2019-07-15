@@ -96,6 +96,12 @@
         </tr>
         {{/each}}
     </script>
+    <script type="text/html" id="tpl4">
+        <option>所有分类</option>
+        {{each}}
+            
+        {{/each}}
+    </script>
     <script>
         // // 设置左侧菜单
         // $('#release_btn').click(function(){
@@ -117,17 +123,17 @@
                 e.preventDefault();
                 console.log($('form :selected')[0].innerText);
                 console.log($('form :selected')[1].innerText);
-                // var str = $('form :selected')[0].innerText.substr(0,2)
-                // console.log(str);
                 if ($('form :selected')[1].innerText != '所有状态') {
                     var str = $('form :selected')[1].innerText
+                }
+                if (condition) {
+                    
                 }
                 $.get({
                     url: 'http://localhost:8000/admin/search',
                     data: {
                         page: 1,
-                        state: str,
-                        // type:"奇异"
+                        state: str
                     },
                     success: function (res) {
                         console.log(res);
@@ -137,29 +143,63 @@
                 })
             })
             console.log($('.page-item').eq(2));
-            
+
             $('.page-link').on('click', function (e) {
                 e.preventDefault()
                 // console.log($(this).eq(2).parent());
-                console.log($(this).parent().prevAll());
+                // console.log($(this).parent().prevAll());
                 if ($(this).text() == '1') {
                     $(this).parent().prevAll().addClass('disabled')
-                }else{
+                } else {
                     $(this).parent().prevAll().removeClass('disabled')
                 }
-                $(this).parent().addClass('active').siblings().removeClass('active')
-                if ($(this).text() <= 7) {
+
+                if ($(this).text() < Infinity) {
+                    $(this).parent().addClass('active').siblings().removeClass('active')
+                    if ($('form :selected')[1].innerText != '所有状态') {
+                        var str = $('form :selected')[1].innerText
+                    }
                     $.get({
                         url: 'http://localhost:8000/admin/search',
                         data: {
-                            page: $(this).text()
+                            page: $(this).text(),
+                            state: str
                         },
                         success: function (res) {
-                            // console.log(res.data);
                             var ress = template('tpl3', res.data)
                             $('tbody').html(ress)
                         }
                     })
+                } else if ($(this).text() == '下一页') {
+                    if ($('.active').text() < 7) {
+                        $('.active').next().addClass('active').siblings().removeClass('active');
+                        $.get({
+                            url: 'http://localhost:8000/admin/search',
+                            data: {
+                                page: $('.active').children('a').text(),
+                                state: str
+                            },
+                            success: function (res) {
+                                var ress = template('tpl3', res.data)
+                                $('tbody').html(ress)
+                            }
+                        })
+                    }
+                } else if ($(this).text() == '上一页') {
+                    if ($('.active').text() > 1) {
+                        $('.active').prev().addClass('active').siblings().removeClass('active');
+                        $.get({
+                            url: 'http://localhost:8000/admin/search',
+                            data: {
+                                page: $('.active').children('a').text(),
+                                state: str
+                            },
+                            success: function (res) {
+                                var ress = template('tpl3', res.data)
+                                $('tbody').html(ress)
+                            }
+                        })
+                    }
                 }
             })
         })
