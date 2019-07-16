@@ -172,8 +172,6 @@
                     slug: $('#recipient-name1').val().trim()
                 },
                 success: function (res) {
-                    console.log(res);
-
                     if (res.code == 200) {
                         $.get({
                             url: 'http://localhost:8000/admin/category_search',
