@@ -87,8 +87,8 @@
             <td class="text-center">{{$value.date}}</td>
             <td class="text-center">{{$value.state}}</td>
             <td class="text-center">
-                <a href="" class="btn btn-default btn-xs">编辑</a>
-                <a href="javascript:deleteTr( 998 );" class="btn btn-danger btn-xs">删除</a>
+                <a href="./article_edit.html?id={{$value.id}}" class="btn btn-default btn-xs">编辑</a>
+                <a href="#" ids='{{$value.id}}' class="btn btn-danger btn-danger1 btn-xs">删除</a>
             </td>
         </tr>
         {{/each}}
@@ -132,9 +132,11 @@
                     if (res.code == 200) {
                         var ress = template('tpl3', res.data)
                         $('tbody').html(ress)
+
+                        window.currentPage = $pagination.twbsPagination('getCurrentPage');
                         if (totalPages != res.totalPage) {
                             totalPages = res.totalPage;
-                            var currentPage = $pagination.twbsPagination('getCurrentPage');
+                            
                             $pagination.twbsPagination('destroy');
                             $pagination.twbsPagination($.extend({}, defaultOpts, {
                                 startPage: 1,
@@ -145,14 +147,32 @@
                 }
             })
         }
-        console.log($('.page-item').eq(1).nextAll());
-
         $('#btnSearch').on('click', function (e) {
             e.preventDefault();
             $($('.page-link')[0]).trigger('click')
             detadf(1)
         })
         $('#btnSearch').trigger('click');
+
+        $('tbody').on('click','.btn-danger1',function(e){
+            e.preventDefault();
+            // console.log($(this));
+            
+            $(this).parents('tr').remove()
+            console.log(currentPage);
+            
+            $.get({
+                url:'http://localhost:8000/admin/article_delete',
+                data:{
+                    id:$(this).attr('ids')
+                },
+                success:function(res){
+                    if (res.code == 200) {
+                        detadf(currentPage)
+                    }
+                }
+            })
+        })
     </script>
 
 </body>
